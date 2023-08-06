@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import UserList from './components/UserList';
+import SelectedUserDetails from './components/SelectedUserDetails';
 
-function App() {
+const App = () => {
+    const [userList, setUserList] =  useState([]);
+    const [selectedUserDetail, setSelectedUserDetail] = useState(null);
+
+
+    // function to make api call and fetch user list
+    const fetchUserList = async() => {
+      const response = await fetch('https://panorbit.in/api/users.json');
+      const data = await response.json();
+      setUserList(data.users);
+    }
+
+    useEffect(() => {
+      fetchUserList();
+    }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      {
+        selectedUserDetail ? 
+        <SelectedUserDetails setSelectedUserDetail={setSelectedUserDetail} userList={userList} selectedUserDetail={selectedUserDetail} />
+        :
+        <UserList setSelectedUserDetail={setSelectedUserDetail} userList={userList} /> 
+
+      }
     </div>
   );
 }
